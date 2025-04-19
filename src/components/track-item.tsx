@@ -64,7 +64,7 @@ const TrackGenres = ({ genres }: { genres: string[] }) => {
 
 const TrackActions = ({ audioFile }: { audioFile?: string }) => {
   return (
-    <div className="col-start-3 row-span-2 flex items-center justify-end">
+    <div className="row-start-3 col-span-3 sm:col-start-3 sm:row-span-2 flex items-center justify-end">
       {audioFile && (
         <Button variant="ghost" size="icon">
           <Play />
@@ -91,7 +91,7 @@ const TrackItem = ({ track }: TrackItemProps) => {
     >
       <TrackCover coverImage={track.coverImage} />
 
-      <div className="col-start-2 row-span-2 flex flex-col gap-1">
+      <div className="col-start-2 col-span-2 sm:row-span-2 sm:col-span-1 flex flex-col gap-1">
         <p className="text-lg">{track.title}</p>
         <p className="text-sm inline-flex items-center gap-1">
           <User size="14px" />
