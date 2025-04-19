@@ -63,19 +63,30 @@ export interface QueryParams {
   artist?: string;
 }
 
+export type Sort = "title" | "artist" | "album" | "createdAt";
+export type Order = "asc" | "desc";
+
 export async function fetchTracks(
   params: QueryParams = {},
 ): Promise<PaginatedResponse<Track>> {
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    queryParams.set(key, value.toString());
+    if (value) {
+      queryParams.set(key, value.toString());
+    }
   });
 
   const requestUrl =
     `${import.meta.env.VITE_API_HOST}/api/tracks` +
     (queryParams.size !== 0 ? `?${queryParams}` : "");
 
+  const response = await fetch(requestUrl);
+  return await response.json();
+}
+
+export async function fetchGenres(): Promise<string[]> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/genres`;
   const response = await fetch(requestUrl);
   return await response.json();
 }

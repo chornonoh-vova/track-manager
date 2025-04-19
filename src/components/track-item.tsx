@@ -8,7 +8,7 @@ import {
   User,
 } from "lucide-react";
 import { type Track } from "../lib/api";
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 
 type TrackItemProps = {
@@ -24,7 +24,7 @@ const TrackCover = ({ coverImage }: { coverImage?: string }) => {
   return (
     <ImageOff
       className={cn(common, "border border-border p-4")}
-      size="112px"
+      size={112}
       absoluteStrokeWidth
     />
   );
@@ -37,7 +37,7 @@ const TrackAlbum = ({ album }: { album?: string }) => {
 
   return (
     <p className="text-sm text-secondary-foreground inline-flex items-center gap-1">
-      <Disc3 size="14px" />
+      <Disc3 size={14} />
       {album}
     </p>
   );

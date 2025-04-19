@@ -6,25 +6,39 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./pagination";
+} from "./ui/pagination";
 
 type DataPaginationProps = {
   meta: PaginatedResponse<unknown>["meta"];
+  onPrev: () => void;
+  onNext: () => void;
+  onPage: (page: number) => void;
 };
 
-const DataPagination = ({ meta }: DataPaginationProps) => {
+const DataPagination = ({
+  meta,
+  onPrev,
+  onPage,
+  onNext,
+}: DataPaginationProps) => {
   return (
-    <Pagination>
+    <Pagination data-testid="pagination">
       <PaginationContent>
         {meta.page !== 1 && (
           <PaginationItem>
-            <PaginationPrevious />
+            <PaginationPrevious
+              data-testid="pagination-prev"
+              onClick={onPrev}
+            />
           </PaginationItem>
         )}
         {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map(
           (page) => (
             <PaginationItem key={page}>
-              <PaginationLink isActive={page === meta.page}>
+              <PaginationLink
+                isActive={page === meta.page}
+                onClick={() => onPage(page)}
+              >
                 {page}
               </PaginationLink>
             </PaginationItem>
@@ -32,7 +46,7 @@ const DataPagination = ({ meta }: DataPaginationProps) => {
         )}
         {meta.page !== meta.totalPages && (
           <PaginationItem>
-            <PaginationNext />
+            <PaginationNext data-testid="pagination-next" onClick={onNext} />
           </PaginationItem>
         )}
       </PaginationContent>

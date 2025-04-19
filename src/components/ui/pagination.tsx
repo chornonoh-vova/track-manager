@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { type ComponentProps } from "react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 import { Button } from "./button";
 
 const Pagination = ({ className, ...props }: ComponentProps<"nav">) => {
@@ -8,7 +8,6 @@ const Pagination = ({ className, ...props }: ComponentProps<"nav">) => {
     <nav
       role="navigation"
       aria-label="pagination"
-      data-slot="pagination"
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
     />
@@ -18,16 +17,13 @@ const Pagination = ({ className, ...props }: ComponentProps<"nav">) => {
 const PaginationContent = ({ className, ...props }: ComponentProps<"ul">) => {
   return (
     <ul
-      data-slot="pagination-content"
       className={cn("flex flex-row items-center gap-1", className)}
       {...props}
     />
   );
 };
 
-const PaginationItem = ({ ...props }: ComponentProps<"li">) => {
-  return <li data-slot="pagination-item" {...props} />;
-};
+const PaginationItem = (props: ComponentProps<"li">) => <li {...props} />;
 
 type PaginationLinkProps = Exclude<
   ComponentProps<typeof Button>,
@@ -40,7 +36,6 @@ const PaginationLink = ({ isActive, ...props }: PaginationLinkProps) => {
   return (
     <Button
       aria-current={isActive ? "page" : undefined}
-      data-slot="pagination-link"
       data-active={isActive}
       variant={isActive ? "outline" : "ghost"}
       size="icon"
