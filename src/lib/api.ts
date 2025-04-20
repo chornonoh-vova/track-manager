@@ -82,6 +82,24 @@ export interface CreateTrackDto {
   coverImage?: string;
 }
 
+/**
+ * Data for updating an existing track (all fields optional)
+ */
+export interface UpdateTrackDto {
+  /** New title for the track */
+  title?: string;
+  /** New artist for the track */
+  artist?: string;
+  /** New album for the track */
+  album?: string;
+  /** New genres for the track */
+  genres?: string[];
+  /** New cover image URL for the track */
+  coverImage?: string;
+  /** New audio file for the track */
+  audioFile?: string;
+}
+
 export async function fetchTracks(
   params: QueryParams = {},
 ): Promise<PaginatedResponse<Track>> {
@@ -115,6 +133,25 @@ export async function createTrack(newTrack: CreateTrackDto): Promise<Track> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newTrack),
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
+  return await response.json();
+}
+
+export async function updateTrack(
+  id: string,
+  updatedTrack: UpdateTrackDto,
+): Promise<Track> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks/${id}`;
+  const response = await fetch(requestUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedTrack),
   });
   if (!response.ok) {
     const { error } = await response.json();

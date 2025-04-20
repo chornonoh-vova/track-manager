@@ -1,8 +1,9 @@
-import { Disc3, ImageOff, Pencil, Play, Upload, User } from "lucide-react";
+import { Disc3, ImageOff, Play, Upload, User } from "lucide-react";
 import { type Track } from "../lib/api";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { DeleteTrackPopover } from "./delete-track-popover";
+import { EditTrackModal } from "./edit-track-modal";
 
 type TrackItemProps = {
   track: Track;
@@ -70,13 +71,7 @@ const TrackActions = ({ track }: { track: Track }) => {
       >
         <Upload />
       </Button>
-      <Button
-        data-testid={`edit-track-${track.id}`}
-        variant="ghost"
-        size="icon"
-      >
-        <Pencil />
-      </Button>
+      <EditTrackModal track={track} />
       <DeleteTrackPopover track={track} />
     </div>
   );

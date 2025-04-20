@@ -1,8 +1,10 @@
+import { updateTrack, UpdateTrackDto, type Track } from "../lib/api";
+import { z } from "zod";
+import { useGenres } from "../lib/queries";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTrack, CreateTrackDto } from "../lib/api";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -12,12 +14,10 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { DialogFooter } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Loader2, Plus, XIcon } from "lucide-react";
-import { toast } from "sonner";
+import { DialogFooter } from "./ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { useGenres } from "../lib/queries";
 
 const formSchema = z.object({
   title: z.string().trim().min(1, "Track title is required"),
@@ -35,17 +35,24 @@ const formSchema = z.object({
     .or(z.literal("")),
 });
 
-const CreateTrackForm = ({ onSuccess }: { onSuccess: () => void }) => {
+const EditTrackForm = ({
+  track,
+  onSuccess,
+}: {
+  track: Track;
+  onSuccess: () => void;
+}) => {
   const { data: genres } = useGenres();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      artist: "",
-      album: "",
-      genres: [],
-      coverImage: "",
-    },
+    defaultValues: Object.fromEntries(
+      Object.entries(track).map(([key, value]) => {
+        if (key === "genres") {
+          return [key, value.map((genre: string) => ({ value: genre }))];
+        }
+        return [key, value];
+      }),
+    ),
   });
 
   const {
@@ -60,10 +67,10 @@ const CreateTrackForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: createTrack,
+    mutationFn: (variables: UpdateTrackDto) => updateTrack(track.id, variables),
     onSuccess: (data) => {
       toast.success(
-        `Track ${data.title} by ${data.artist} was successfully created!`,
+        `Track ${data.title} by ${data.artist} was successfully updated!`,
       );
       onSuccess();
     },
@@ -74,15 +81,15 @@ const CreateTrackForm = ({ onSuccess }: { onSuccess: () => void }) => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const newTrack: Record<string, unknown> = Object.fromEntries(
+    const updatedTrack: Record<string, unknown> = Object.fromEntries(
       Object.entries(values).filter(([, value]) => !!value),
     );
 
-    if ("genres" in newTrack && Array.isArray(newTrack.genres)) {
-      newTrack.genres = newTrack.genres.map(({ value }) => value);
+    if ("genres" in updatedTrack && Array.isArray(updatedTrack.genres)) {
+      updatedTrack.genres = updatedTrack.genres.map(({ value }) => value);
     }
 
-    mutation.mutate(newTrack as unknown as CreateTrackDto);
+    mutation.mutate(updatedTrack as unknown as UpdateTrackDto);
   };
 
   return (
@@ -223,4 +230,4 @@ const CreateTrackForm = ({ onSuccess }: { onSuccess: () => void }) => {
   );
 };
 
-export { CreateTrackForm };
+export { EditTrackForm };
