@@ -122,3 +122,15 @@ export async function createTrack(newTrack: CreateTrackDto): Promise<Track> {
   }
   return await response.json();
 }
+
+export async function deleteTrack(id: string): Promise<void> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks/${id}`;
+  const response = await fetch(requestUrl, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
+  return;
+}

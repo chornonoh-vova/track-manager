@@ -1,15 +1,8 @@
-import {
-  Disc3,
-  ImageOff,
-  Pencil,
-  Play,
-  Trash2,
-  Upload,
-  User,
-} from "lucide-react";
+import { Disc3, ImageOff, Pencil, Play, Upload, User } from "lucide-react";
 import { type Track } from "../lib/api";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
+import { DeleteTrackPopover } from "./delete-track-popover";
 
 type TrackItemProps = {
   track: Track;
@@ -62,37 +55,29 @@ const TrackGenres = ({ genres }: { genres: string[] }) => {
   );
 };
 
-const TrackActions = ({
-  trackId,
-  audioFile,
-}: {
-  trackId: string;
-  audioFile?: string;
-}) => {
+const TrackActions = ({ track }: { track: Track }) => {
   return (
     <div className="row-start-3 col-span-3 sm:col-start-3 sm:row-span-2 flex items-center justify-end">
-      {audioFile && (
+      {track.audioFile && (
         <Button variant="ghost" size="icon">
           <Play />
         </Button>
       )}
       <Button
-        data-testid={`upload-track-${trackId}`}
+        data-testid={`upload-track-${track.id}`}
         variant="ghost"
         size="icon"
       >
         <Upload />
       </Button>
-      <Button data-testid={`edit-track-${trackId}`} variant="ghost" size="icon">
-        <Pencil />
-      </Button>
       <Button
-        data-testid={`delete-track-${trackId}`}
+        data-testid={`edit-track-${track.id}`}
         variant="ghost"
         size="icon"
       >
-        <Trash2 />
+        <Pencil />
       </Button>
+      <DeleteTrackPopover track={track} />
     </div>
   );
 };
@@ -121,7 +106,7 @@ const TrackItem = ({ track }: TrackItemProps) => {
         <TrackGenres genres={track.genres} />
       </div>
 
-      <TrackActions trackId={track.id} audioFile={track.audioFile} />
+      <TrackActions track={track} />
     </div>
   );
 };
