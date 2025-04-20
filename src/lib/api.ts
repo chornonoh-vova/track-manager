@@ -66,6 +66,22 @@ export interface QueryParams {
 export type Sort = "title" | "artist" | "album" | "createdAt";
 export type Order = "asc" | "desc";
 
+/**
+ * Data required to create a new track
+ */
+export interface CreateTrackDto {
+  /** Title of the track */
+  title: string;
+  /** Artist who created the track */
+  artist: string;
+  /** Optional album the track belongs to */
+  album?: string;
+  /** List of genres associated with the track */
+  genres: string[];
+  /** Optional URL to the track's cover image */
+  coverImage?: string;
+}
+
 export async function fetchTracks(
   params: QueryParams = {},
 ): Promise<PaginatedResponse<Track>> {
@@ -88,5 +104,21 @@ export async function fetchTracks(
 export async function fetchGenres(): Promise<string[]> {
   const requestUrl = `${import.meta.env.VITE_API_HOST}/api/genres`;
   const response = await fetch(requestUrl);
+  return await response.json();
+}
+
+export async function createTrack(newTrack: CreateTrackDto): Promise<Track> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks`;
+  const response = await fetch(requestUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newTrack),
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
   return await response.json();
 }

@@ -62,7 +62,13 @@ const TrackGenres = ({ genres }: { genres: string[] }) => {
   );
 };
 
-const TrackActions = ({ audioFile }: { audioFile?: string }) => {
+const TrackActions = ({
+  trackId,
+  audioFile,
+}: {
+  trackId: string;
+  audioFile?: string;
+}) => {
   return (
     <div className="row-start-3 col-span-3 sm:col-start-3 sm:row-span-2 flex items-center justify-end">
       {audioFile && (
@@ -70,13 +76,21 @@ const TrackActions = ({ audioFile }: { audioFile?: string }) => {
           <Play />
         </Button>
       )}
-      <Button variant="ghost" size="icon">
+      <Button
+        data-testid={`upload-track-${trackId}`}
+        variant="ghost"
+        size="icon"
+      >
         <Upload />
       </Button>
-      <Button variant="ghost" size="icon">
+      <Button data-testid={`edit-track-${trackId}`} variant="ghost" size="icon">
         <Pencil />
       </Button>
-      <Button variant="ghost" size="icon">
+      <Button
+        data-testid={`delete-track-${trackId}`}
+        variant="ghost"
+        size="icon"
+      >
         <Trash2 />
       </Button>
     </div>
@@ -87,13 +101,19 @@ const TrackItem = ({ track }: TrackItemProps) => {
   return (
     <div
       key={track.id}
+      data-testid={`track-item-${track.id}`}
       className="grid grid-cols-[112px_repeat(2,_1fr)] gap-2 p-2 border border-border rounded-md"
     >
       <TrackCover coverImage={track.coverImage} />
 
       <div className="col-start-2 col-span-2 sm:row-span-2 sm:col-span-1 flex flex-col gap-1">
-        <p className="text-lg">{track.title}</p>
-        <p className="text-sm inline-flex items-center gap-1">
+        <p data-testid={`track-item-${track.id}-title`} className="text-lg">
+          {track.title}
+        </p>
+        <p
+          data-testid={`track-item-${track.id}-artist`}
+          className="text-sm inline-flex items-center gap-1"
+        >
           <User size="14px" />
           {track.artist}
         </p>
@@ -101,7 +121,7 @@ const TrackItem = ({ track }: TrackItemProps) => {
         <TrackGenres genres={track.genres} />
       </div>
 
-      <TrackActions audioFile={track.audioFile} />
+      <TrackActions trackId={track.id} audioFile={track.audioFile} />
     </div>
   );
 };

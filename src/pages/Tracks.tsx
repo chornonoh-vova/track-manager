@@ -1,5 +1,4 @@
-import { Loader2, Plus } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Loader2 } from "lucide-react";
 import { useGenres, useTracks } from "../lib/queries";
 import { TracksList } from "../components/tracks-list";
 import { FilterGenre } from "../components/filter-genre";
@@ -9,6 +8,7 @@ import { Input } from "../components/ui/input";
 import { SortSelect } from "../components/sort-select";
 import { Order, Sort } from "../lib/api";
 import { DataPagination } from "../components/data-pagination";
+import { CreateTrackModal } from "../components/create-track-modal";
 
 const Tracks = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -90,10 +90,7 @@ const Tracks = () => {
           />
         </div>
 
-        <Button data-testid="create-track-button">
-          <Plus />
-          Create Track
-        </Button>
+        <CreateTrackModal />
       </div>
 
       <div className="flex flex-col gap-2 py-4">

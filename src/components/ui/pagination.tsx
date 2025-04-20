@@ -3,25 +3,21 @@ import { type ComponentProps } from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "./button";
 
-const Pagination = ({ className, ...props }: ComponentProps<"nav">) => {
-  return (
-    <nav
-      role="navigation"
-      aria-label="pagination"
-      className={cn("mx-auto flex w-full justify-center", className)}
-      {...props}
-    />
-  );
-};
+const Pagination = ({ className, ...props }: ComponentProps<"nav">) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn("mx-auto flex w-full justify-center", className)}
+    {...props}
+  />
+);
 
-const PaginationContent = ({ className, ...props }: ComponentProps<"ul">) => {
-  return (
-    <ul
-      className={cn("flex flex-row items-center gap-1", className)}
-      {...props}
-    />
-  );
-};
+const PaginationContent = ({ className, ...props }: ComponentProps<"ul">) => (
+  <ul
+    className={cn("flex flex-row items-center gap-1", className)}
+    {...props}
+  />
+);
 
 const PaginationItem = (props: ComponentProps<"li">) => <li {...props} />;
 
@@ -32,17 +28,15 @@ type PaginationLinkProps = Exclude<
   isActive?: boolean;
 };
 
-const PaginationLink = ({ isActive, ...props }: PaginationLinkProps) => {
-  return (
-    <Button
-      aria-current={isActive ? "page" : undefined}
-      data-active={isActive}
-      variant={isActive ? "outline" : "ghost"}
-      size="icon"
-      {...props}
-    />
-  );
-};
+const PaginationLink = ({ isActive, ...props }: PaginationLinkProps) => (
+  <Button
+    aria-current={isActive ? "page" : undefined}
+    data-active={isActive}
+    variant={isActive ? "outline" : "ghost"}
+    size="icon"
+    {...props}
+  />
+);
 
 const PaginationPrevious = ({
   className,
