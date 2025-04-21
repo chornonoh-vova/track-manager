@@ -95,7 +95,10 @@ const Tracks = () => {
 
       <div className="flex flex-col gap-2 py-4">
         {status === "pending" ? (
-          <div className="grid place-items-center rounded-md border border-border py-8">
+          <div
+            className="grid place-items-center rounded-md border border-border py-8"
+            data-testid="loading-tracks"
+          >
             <div className="flex gap-2">
               <Loader2 className="animate-spin" /> <span>Loading...</span>
             </div>

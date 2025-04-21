@@ -1,10 +1,11 @@
-import { Loader2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { deleteTrack, type Track } from "../lib/api";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { LoadingButton } from "./ui/loading-button";
 
 const DeleteTrackPopover = ({ track }: { track: Track }) => {
   const [open, setOpen] = useState(false);
@@ -12,12 +13,15 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
   const mutation = useMutation({
     mutationFn: deleteTrack,
     onSuccess: () => {
-      toast.info(`Track ${track.title} was successfully deleted!`);
+      toast.info(
+        <div data-testid="toast-info">
+          Track {track.title} was successfully deleted!
+        </div>,
+      );
       setOpen(false);
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) =>
+      toast.error(<div data-testid="toast-error">{error.message}</div>),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["tracks"] }),
   });
 
@@ -32,7 +36,7 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
           <Trash2 />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="space-y-2">
+      <PopoverContent className="space-y-2" data-testid="confirm-dialog">
         <p className="text-lg">
           Are you sure that you want to delete {track.title}?
         </p>
@@ -41,19 +45,20 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
         <div className="flex justify-end gap-2">
           <Button
             variant="outline"
+            data-testid="cancel-delete"
             onClick={() => setOpen(false)}
             disabled={mutation.isPending}
           >
             Cancel
           </Button>
-          <Button
+          <LoadingButton
             variant="destructive"
+            data-testid="confirm-delete"
             onClick={() => mutation.mutate(track.id)}
-            disabled={mutation.isPending}
+            isLoading={mutation.isPending}
           >
-            {mutation.isPending && <Loader2 className="animate-spin" />}
             Yes, delete
-          </Button>
+          </LoadingButton>
         </div>
       </PopoverContent>
     </Popover>
