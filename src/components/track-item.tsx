@@ -1,10 +1,10 @@
-import { Disc3, ImageOff, Upload, User } from "lucide-react";
-import { getAudioFileUrl, type Track } from "../lib/api";
-import { Button } from "./ui/button";
+import { Disc3, ImageOff, User } from "lucide-react";
+import { type Track } from "../lib/api";
 import { cn } from "../lib/utils";
 import { DeleteTrackPopover } from "./delete-track-popover";
 import { EditTrackModal } from "./edit-track-modal";
 import { TrackAudioPlayer } from "./track-audio-player";
+import { UploadTrackModal } from "./upload-track-modal";
 
 type TrackItemProps = {
   track: Track;
@@ -63,13 +63,7 @@ const TrackActions = ({ track }: { track: Track }) => {
       {track.audioFile && (
         <TrackAudioPlayer trackId={track.id} audioFile={track.audioFile} />
       )}
-      <Button
-        data-testid={`upload-track-${track.id}`}
-        variant="ghost"
-        size="icon"
-      >
-        <Upload />
-      </Button>
+      <UploadTrackModal track={track} />
       <EditTrackModal track={track} />
       <DeleteTrackPopover track={track} />
     </div>

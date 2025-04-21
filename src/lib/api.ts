@@ -175,3 +175,31 @@ export async function deleteTrack(id: string): Promise<void> {
 export function getAudioFileUrl(audioFile: string): string {
   return `${import.meta.env.VITE_API_HOST}/api/files/${audioFile}`;
 }
+
+export async function deleteTrackFile(id: string): Promise<Track> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks/${id}/file`;
+  const response = await fetch(requestUrl, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
+  return await response.json();
+}
+
+export async function uploadTrackFile(
+  id: string,
+  data: FormData,
+): Promise<Track> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks/${id}/upload`;
+  const response = await fetch(requestUrl, {
+    method: "POST",
+    body: data,
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
+  return await response.json();
+}

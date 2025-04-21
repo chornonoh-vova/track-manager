@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { getAudioFileUrl } from "../lib/api";
 import { Pause, Play } from "lucide-react";
