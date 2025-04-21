@@ -171,3 +171,7 @@ export async function deleteTrack(id: string): Promise<void> {
   }
   return;
 }
+
+export function getAudioFileUrl(audioFile: string): string {
+  return `${import.meta.env.VITE_API_HOST}/api/files/${audioFile}`;
+}
