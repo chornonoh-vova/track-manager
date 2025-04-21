@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { EditTrackForm } from "./edit-track-form";
+import { UploadTrackFileForm } from "./upload-track-file-form";
 import { useState } from "react";
-import { type Track } from "../lib/api";
+import { Track } from "../lib/api";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-const EditTrackButton = ({
+const UploadTrackFileButton = ({
   trackId,
   title,
   onClick,
@@ -32,29 +32,29 @@ const EditTrackButton = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            data-testid={`edit-track-${trackId}`}
+            data-testid={`upload-track-${trackId}`}
             variant="ghost"
             size="icon"
             onClick={onClick}
           >
-            <Pencil />
+            <Upload />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Edit Track {title} metadata</p>
+          <p>Upload Track File for {title}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
 };
 
-const EditTrackModal = ({ track }: { track: Track }) => {
+const UploadTrackFileModal = ({ track }: { track: Track }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <EditTrackButton
+        <UploadTrackFileButton
           trackId={track.id}
           title={track.title}
           onClick={() => setOpen(true)}
@@ -63,16 +63,16 @@ const EditTrackModal = ({ track }: { track: Track }) => {
 
       <DialogContent className="sm:max-w-450px">
         <DialogHeader>
-          <DialogTitle>Edit a Track</DialogTitle>
+          <DialogTitle>Upload a file for {track.title}</DialogTitle>
           <DialogDescription>
-            Edit a track without uploading a file. Input track metadata here.
+            Upload a music file (MP3, WAV, etc.) to an existing track.
           </DialogDescription>
         </DialogHeader>
 
-        <EditTrackForm track={track} onSuccess={() => setOpen(false)} />
+        <UploadTrackFileForm track={track} onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export { EditTrackModal };
+export { UploadTrackFileModal };

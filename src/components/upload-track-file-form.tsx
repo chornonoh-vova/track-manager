@@ -15,7 +15,8 @@ import { DialogFooter } from "./ui/dialog";
 import { LoadingButton } from "./ui/loading-button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { FileWarning } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = [
@@ -25,7 +26,7 @@ const ALLOWED_MIME_TYPES = [
   "audio/x-wav",
 ];
 
-const uploadTrackSchema = z.object({
+const uploadTrackFileSchema = z.object({
   file: z
     .any()
     .refine((files) => files?.length == 1, "File is required.")
@@ -39,15 +40,15 @@ const uploadTrackSchema = z.object({
     ),
 });
 
-const UploadTrackForm = ({
+const UploadTrackFileForm = ({
   track,
   onSuccess,
 }: {
   track: Track;
   onSuccess: () => void;
 }) => {
-  const form = useForm<z.infer<typeof uploadTrackSchema>>({
-    resolver: zodResolver(uploadTrackSchema),
+  const form = useForm<z.infer<typeof uploadTrackFileSchema>>({
+    resolver: zodResolver(uploadTrackFileSchema),
   });
 
   const fileRef = form.register("file");
@@ -74,7 +75,7 @@ const UploadTrackForm = ({
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["tracks"] }),
   });
 
-  const onSubmit = (data: z.infer<typeof uploadTrackSchema>) => {
+  const onSubmit = (data: z.infer<typeof uploadTrackFileSchema>) => {
     const file = data.file[0];
     const formData = new FormData();
     formData.append("file", file);
@@ -84,13 +85,14 @@ const UploadTrackForm = ({
   return (
     <Form {...form}>
       {track.audioFile && (
-        <div className="flex items-center gap-4 border border-primary rounded-md p-2 bg-primary/5">
-          <FileWarning size={48} absoluteStrokeWidth />
-          <p>
-            Track {track.title} already has audio file {track.audioFile}.<br />
-            It will be replaced by the new file.
-          </p>
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Warning</AlertTitle>
+          <AlertDescription>
+            Track {track.title} already has audio file {track.audioFile}. It
+            will be replaced by the new file.
+          </AlertDescription>
+        </Alert>
       )}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -125,4 +127,4 @@ const UploadTrackForm = ({
   );
 };
 
-export { UploadTrackForm };
+export { UploadTrackFileForm };

@@ -3,12 +3,56 @@ import { Button } from "./ui/button";
 import { getAudioFileUrl } from "../lib/api";
 import { Pause, Play } from "lucide-react";
 import { Progress } from "./ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+
+const PlayPauseButton = ({
+  playing,
+  trackId,
+  title,
+  onClick,
+}: {
+  playing: boolean;
+  trackId: string;
+  title: string;
+  onClick: () => void;
+}) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            data-testid={
+              playing ? `pause-button-${trackId}` : `play-button-${trackId}`
+            }
+            onClick={onClick}
+          >
+            {playing ? <Pause /> : <Play />}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>
+            {playing ? "Pause" : "Play"} {title}
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 const TrackAudioPlayer = ({
   trackId,
+  title,
   audioFile,
 }: {
   trackId: string;
+  title: string;
   audioFile: string;
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -47,17 +91,12 @@ const TrackAudioPlayer = ({
         data-testid={`audio-player-${trackId}`}
         className="flex items-center grow gap-1"
       >
-        <Button
-          variant="ghost"
-          size="icon"
-          data-testid={
-            playing ? `pause-button-${trackId}` : `play-button-${trackId}`
-          }
+        <PlayPauseButton
+          playing={playing}
+          trackId={trackId}
+          title={title}
           onClick={onPlayPauseClick}
-        >
-          {playing ? <Pause /> : <Play />}
-        </Button>
-
+        />
         <Progress data-testid={`audio-progress-${trackId}`} value={progress} />
       </div>
     </>

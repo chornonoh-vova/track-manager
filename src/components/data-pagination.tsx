@@ -24,14 +24,14 @@ const DataPagination = ({
   return (
     <Pagination data-testid="pagination">
       <PaginationContent>
-        {meta.page !== 1 && (
-          <PaginationItem>
-            <PaginationPrevious
-              data-testid="pagination-prev"
-              onClick={onPrev}
-            />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <PaginationPrevious
+            data-testid="pagination-prev"
+            onClick={onPrev}
+            disabled={meta.page === 1}
+            aria-disabled={meta.page === 1 ? true : undefined}
+          />
+        </PaginationItem>
         {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map(
           (page) => (
             <PaginationItem key={page}>
@@ -44,11 +44,14 @@ const DataPagination = ({
             </PaginationItem>
           ),
         )}
-        {meta.page !== meta.totalPages && (
-          <PaginationItem>
-            <PaginationNext data-testid="pagination-next" onClick={onNext} />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <PaginationNext
+            data-testid="pagination-next"
+            disabled={meta.page === meta.totalPages}
+            aria-disabled={meta.page === meta.totalPages ? true : undefined}
+            onClick={onNext}
+          />
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

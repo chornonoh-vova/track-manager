@@ -4,7 +4,8 @@ import { cn } from "../lib/utils";
 import { DeleteTrackPopover } from "./delete-track-popover";
 import { EditTrackModal } from "./edit-track-modal";
 import { TrackAudioPlayer } from "./track-audio-player";
-import { UploadTrackModal } from "./upload-track-modal";
+import { UploadTrackFileModal } from "./upload-track-file-modal";
+import { DeleteTrackFilePopover } from "./delete-track-file-popover";
 
 type TrackItemProps = {
   track: Track;
@@ -59,11 +60,18 @@ const TrackGenres = ({ genres }: { genres: string[] }) => {
 
 const TrackActions = ({ track }: { track: Track }) => {
   return (
-    <div className="row-start-3 col-span-3 sm:col-start-3 sm:row-span-2 flex items-center justify-end gap-1">
+    <div className="row-start-3 col-span-3 sm:col-start-3 sm:row-span-2 flex flex-wrap items-center justify-end gap-1">
       {track.audioFile && (
-        <TrackAudioPlayer trackId={track.id} audioFile={track.audioFile} />
+        <>
+          <TrackAudioPlayer
+            trackId={track.id}
+            title={track.title}
+            audioFile={track.audioFile}
+          />
+          <DeleteTrackFilePopover track={track} />
+        </>
       )}
-      <UploadTrackModal track={track} />
+      <UploadTrackFileModal track={track} />
       <EditTrackModal track={track} />
       <DeleteTrackPopover track={track} />
     </div>

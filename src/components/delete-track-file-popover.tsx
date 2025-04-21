@@ -1,5 +1,5 @@
-import { Trash2 } from "lucide-react";
-import { deleteTrack, type Track } from "../lib/api";
+import { Shredder } from "lucide-react";
+import { deleteTrackFile, type Track } from "../lib/api";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useState } from "react";
@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-const DeleteTrackButton = ({
+const DeleteTrackFileButton = ({
   trackId,
   title,
   onClick,
@@ -27,31 +27,31 @@ const DeleteTrackButton = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            data-testid={`delete-track-${trackId}`}
+            data-testid={`delete-track-file-${trackId}`}
             variant="ghost"
             size="icon"
             onClick={onClick}
           >
-            <Trash2 />
+            <Shredder />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Delete Track {title}</p>
+          <p>Delete Track File from {title}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
 };
 
-const DeleteTrackPopover = ({ track }: { track: Track }) => {
+const DeleteTrackFilePopover = ({ track }: { track: Track }) => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: deleteTrack,
+    mutationFn: deleteTrackFile,
     onSuccess: () => {
       toast.info(
         <div data-testid="toast-info">
-          Track {track.title} was successfully deleted!
+          File {track.audioFile} from was successfully deleted {track.title}!
         </div>,
       );
       setOpen(false);
@@ -64,7 +64,7 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
-        <DeleteTrackButton
+        <DeleteTrackFileButton
           trackId={track.id}
           title={track.title}
           onClick={() => setOpen(true)}
@@ -72,7 +72,8 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
       </PopoverTrigger>
       <PopoverContent className="space-y-2" data-testid="confirm-dialog">
         <p className="text-lg">
-          Are you sure that you want to delete {track.title}?
+          Are you sure that you want to delete file {track.audioFile} from{" "}
+          {track.title}?
         </p>
         <p className="font-bold">This action is irreversible.</p>
 
@@ -99,4 +100,4 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
   );
 };
 
-export { DeleteTrackPopover };
+export { DeleteTrackFilePopover };
