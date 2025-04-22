@@ -100,6 +100,16 @@ export interface UpdateTrackDto {
   audioFile?: string;
 }
 
+/**
+ * Response for batch delete operations
+ */
+export interface BatchDeleteResponse {
+  /** IDs of successfully deleted items */
+  success: string[];
+  /** IDs that failed to delete */
+  failed: string[];
+}
+
 export async function fetchTracks(
   params: QueryParams = {},
 ): Promise<PaginatedResponse<Track>> {
@@ -170,6 +180,24 @@ export async function deleteTrack(id: string): Promise<void> {
     throw new Error(error);
   }
   return;
+}
+
+export async function deleteTracks(
+  ids: string[],
+): Promise<BatchDeleteResponse> {
+  const requestUrl = `${import.meta.env.VITE_API_HOST}/api/tracks/delete`;
+  const response = await fetch(requestUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ids }),
+  });
+  if (!response.ok) {
+    const { error } = await response.json();
+    throw new Error(error);
+  }
+  return await response.json();
 }
 
 export function getAudioFileUrl(audioFile: string): string {

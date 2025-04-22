@@ -9,6 +9,10 @@ import { SortSelect } from "../components/sort-select";
 import { Order, Sort } from "../lib/api";
 import { DataPagination } from "../components/data-pagination";
 import { CreateTrackModal } from "../components/create-track-modal";
+import { Checkbox } from "../components/ui/checkbox";
+import { useSelectedTracks } from "../hooks/use-selected-tracks";
+import { SelectedContext } from "../context/selected";
+import { DeleteBulkPopover } from "../components/delete-bulk-popover";
 
 const Tracks = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -20,6 +24,17 @@ const Tracks = () => {
   const [artistValue, setArtistValue] = useState("");
   const debouncedArtist = useDebounce(artistValue, 500);
   const [page, setPage] = useState(1);
+
+  const {
+    selected,
+    selectedCount,
+    isSelectedAll,
+    selectAll,
+    deselectAll,
+    select,
+    deselect,
+    isSelected,
+  } = useSelectedTracks();
 
   const {
     status,
@@ -56,7 +71,7 @@ const Tracks = () => {
         Track Manager
       </h1>
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-4">
         <div className="flex flex-wrap items-center gap-2">
           <Input
             type="search"
@@ -93,6 +108,29 @@ const Tracks = () => {
         <CreateTrackModal />
       </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="select-all"
+            data-testid="select-all"
+            checked={isSelectedAll()}
+            onCheckedChange={(checked) => {
+              if (typeof checked === "boolean") {
+                (checked ? selectAll : deselectAll)();
+              }
+            }}
+          />
+          <label
+            htmlFor="select-all"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Select all tracks
+          </label>
+        </div>
+
+        <DeleteBulkPopover selected={selected} selectedCount={selectedCount} />
+      </div>
+
       <div className="flex flex-col gap-2 py-4">
         {status === "pending" ? (
           <div
@@ -104,7 +142,13 @@ const Tracks = () => {
             </div>
           </div>
         ) : (
-          <>
+          <SelectedContext.Provider
+            value={{
+              select,
+              deselect,
+              isSelected,
+            }}
+          >
             <TracksList tracks={tracks} />
             {tracks.meta.totalPages !== 0 && (
               <DataPagination
@@ -114,7 +158,7 @@ const Tracks = () => {
                 onPage={onPage}
               />
             )}
-          </>
+          </SelectedContext.Provider>
         )}
       </div>
     </div>

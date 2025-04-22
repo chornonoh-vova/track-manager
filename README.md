@@ -29,3 +29,7 @@ npm start
 - [x] Upload a Track file
 - [x] Delete a Track
 - [x] List View with Pagination, Sorting and Filtering
+
+## Extra tasks
+
+- [x] Implemented bulk delete functionality

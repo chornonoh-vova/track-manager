@@ -21,24 +21,23 @@ import {
 const UploadTrackFileButton = ({
   trackId,
   title,
-  onClick,
 }: {
   trackId: string;
   title: string;
-  onClick: () => void;
 }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
-            data-testid={`upload-track-${trackId}`}
-            variant="ghost"
-            size="icon"
-            onClick={onClick}
-          >
-            <Upload />
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              data-testid={`upload-track-${trackId}`}
+              variant="ghost"
+              size="icon"
+            >
+              <Upload />
+            </Button>
+          </DialogTrigger>
         </TooltipTrigger>
         <TooltipContent>
           <p>Upload Track File for {title}</p>
@@ -53,13 +52,7 @@ const UploadTrackFileModal = ({ track }: { track: Track }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <UploadTrackFileButton
-          trackId={track.id}
-          title={track.title}
-          onClick={() => setOpen(true)}
-        />
-      </DialogTrigger>
+      <UploadTrackFileButton trackId={track.id} title={track.title} />
 
       <DialogContent className="sm:max-w-450px">
         <DialogHeader>

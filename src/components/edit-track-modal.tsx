@@ -21,24 +21,23 @@ import {
 const EditTrackButton = ({
   trackId,
   title,
-  onClick,
 }: {
   trackId: string;
   title: string;
-  onClick: () => void;
 }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
-            data-testid={`edit-track-${trackId}`}
-            variant="ghost"
-            size="icon"
-            onClick={onClick}
-          >
-            <Pencil />
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              data-testid={`edit-track-${trackId}`}
+              variant="ghost"
+              size="icon"
+            >
+              <Pencil />
+            </Button>
+          </DialogTrigger>
         </TooltipTrigger>
         <TooltipContent>
           <p>Edit Track {title} metadata</p>
@@ -53,13 +52,7 @@ const EditTrackModal = ({ track }: { track: Track }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <EditTrackButton
-          trackId={track.id}
-          title={track.title}
-          onClick={() => setOpen(true)}
-        />
-      </DialogTrigger>
+      <EditTrackButton trackId={track.id} title={track.title} />
 
       <DialogContent className="sm:max-w-450px">
         <DialogHeader>

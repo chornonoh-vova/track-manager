@@ -22,3 +22,32 @@ export function useGenres() {
     queryFn: fetchGenres,
   });
 }
+
+export function useTrackIds() {
+  return useQuery({
+    queryKey: ["tracks", "ids"],
+    queryFn: async () => {
+      const limit = 100;
+      const ids = new Set<string>();
+
+      const firstPage = await fetchTracks({ page: 1, limit });
+
+      firstPage.data.forEach(({ id }) => ids.add(id));
+
+      const totalPages = firstPage.meta.totalPages;
+
+      if (totalPages > 1) {
+        const nextPages = await Promise.all(
+          Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((page) =>
+            fetchTracks({ page, limit }),
+          ),
+        );
+        for (const page of nextPages) {
+          page.data.forEach(({ id }) => ids.add(id));
+        }
+      }
+
+      return ids;
+    },
+  });
+}

@@ -16,24 +16,23 @@ import {
 const DeleteTrackButton = ({
   trackId,
   title,
-  onClick,
 }: {
   trackId: string;
   title: string;
-  onClick: () => void;
 }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
-            data-testid={`delete-track-${trackId}`}
-            variant="ghost"
-            size="icon"
-            onClick={onClick}
-          >
-            <Trash2 />
-          </Button>
+          <PopoverTrigger asChild>
+            <Button
+              data-testid={`delete-track-${trackId}`}
+              variant="ghost"
+              size="icon"
+            >
+              <Trash2 />
+            </Button>
+          </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>
           <p>Delete Track {title}</p>
@@ -63,13 +62,7 @@ const DeleteTrackPopover = ({ track }: { track: Track }) => {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>
-        <DeleteTrackButton
-          trackId={track.id}
-          title={track.title}
-          onClick={() => setOpen(true)}
-        />
-      </PopoverTrigger>
+      <DeleteTrackButton trackId={track.id} title={track.title} />
       <PopoverContent className="space-y-2" data-testid="confirm-dialog">
         <p className="text-lg">
           Are you sure that you want to delete {track.title}?
