@@ -47,27 +47,63 @@ describe("Tracks page", () => {
     vi.resetAllMocks();
   });
 
-  it("opens a create track modal", async () => {
-    renderPage();
+  describe("initial", () => {
+    it("opens a create track modal", async () => {
+      renderPage();
 
-    await expect
-      .element(page.getByTestId("create-track-button"))
-      .toBeInTheDocument();
+      await expect
+        .element(page.getByRole("button", { name: "Create Track" }))
+        .toBeInTheDocument();
 
-    await page.getByTestId("create-track-button").click();
+      await page.getByRole("button", { name: "Create Track" }).click();
 
-    await expect.element(page.getByTestId("track-form")).toBeInTheDocument();
+      await expect
+        .element(page.getByRole("dialog", { name: "Create a Track" }))
+        .toBeInTheDocument();
+    });
+
+    it("should show errors when required fields are not filled", async () => {
+      renderPage();
+
+      await page.getByRole("button", { name: "Create Track" }).click();
+
+      await page.getByRole("button", { name: "Save" }).click();
+
+      await expect
+        .element(page.getByText("Track title is required"))
+        .toBeInTheDocument();
+
+      await expect
+        .element(page.getByText("Track artist is required"))
+        .toBeInTheDocument();
+    });
   });
 
-  it("should show errors when required fields are not filled", async () => {
-    renderPage();
+  describe("testids", () => {
+    it("opens a create track modal", async () => {
+      renderPage();
 
-    await page.getByTestId("create-track-button").click();
+      await expect
+        .element(page.getByTestId("create-track-button"))
+        .toBeInTheDocument();
 
-    await page.getByTestId("submit-button").click();
+      await page.getByTestId("create-track-button").click();
 
-    await expect.element(page.getByTestId("error-title")).toBeInTheDocument();
+      await expect.element(page.getByTestId("track-form")).toBeInTheDocument();
+    });
 
-    await expect.element(page.getByTestId("error-artist")).toBeInTheDocument();
+    it("should show errors when required fields are not filled", async () => {
+      renderPage();
+
+      await page.getByTestId("create-track-button").click();
+
+      await page.getByTestId("submit-button").click();
+
+      await expect.element(page.getByTestId("error-title")).toBeInTheDocument();
+
+      await expect
+        .element(page.getByTestId("error-artist"))
+        .toBeInTheDocument();
+    });
   });
 });
